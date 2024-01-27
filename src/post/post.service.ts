@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
-import { CreatePostDto, UpdatePostDto } from './post.dto';
+import { Model } from 'mongoose';
+import { CreatePostDto, ID, UpdatePostDto } from './post.dto';
 import { Post } from './post.schema';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class PostService {
     return this.posts.find().exec();
   }
 
-  async find(id: Types.ObjectId): Promise<Post> {
+  async find(id: ID): Promise<Post> {
     const post = await this.posts.findById(id).exec();
     if (post == null) throw 'post not found';
 
@@ -31,7 +31,7 @@ export class PostService {
     return await post.save();
   }
 
-  async update(id: Types.ObjectId, dto: UpdatePostDto): Promise<Post> {
+  async update(id: ID, dto: UpdatePostDto): Promise<Post> {
     const post = await this.posts.findById(id).exec();
     if (post == null) throw 'post not found';
 
@@ -41,7 +41,7 @@ export class PostService {
     return await post.save();
   }
 
-  async delete(id: Types.ObjectId): Promise<void> {
+  async delete(id: ID): Promise<void> {
     const result = await this.posts.findByIdAndDelete(id);
     if (result == null) console.warn(`could not delete post [${id}] not found`);
   }

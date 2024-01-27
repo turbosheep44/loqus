@@ -7,9 +7,8 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Types } from 'mongoose';
-import { ParseObjectId } from 'src/pipes/object-id.pipe';
-import { CreatePostDto, UpdatePostDto } from './post.dto';
+import { ParseIdPipe } from 'src/pipes/id.pipe';
+import { CreatePostDto, ID, UpdatePostDto } from './post.dto';
 import { Post as BlogPost } from './post.schema';
 import { PostService } from './post.service';
 
@@ -28,20 +27,20 @@ export class PostController {
   }
 
   @Get(':id')
-  find(@Param('id', ParseObjectId) id: Types.ObjectId): Promise<BlogPost> {
+  find(@Param('id', ParseIdPipe) id: ID): Promise<BlogPost> {
     return this.service.find(id);
   }
 
   @Put(':id')
   async update(
-    @Param('id', ParseObjectId) id: Types.ObjectId,
+    @Param('id', ParseIdPipe) id: ID,
     @Body() post: UpdatePostDto,
   ): Promise<BlogPost> {
     return this.service.update(id, post);
   }
 
   @Delete(':id')
-  async delete(@Param('id', ParseObjectId) id: Types.ObjectId): Promise<void> {
+  async delete(@Param('id', ParseIdPipe) id: ID): Promise<void> {
     this.service.delete(id);
   }
 }

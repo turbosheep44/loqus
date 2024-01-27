@@ -10,3 +10,8 @@ export class UpdatePostDto {
   @IsNotEmpty() title: string;
   @IsNotEmpty() content: string;
 }
+
+/**
+ * a string identifier which must be a valid MongoDB ID
+ */
+export type ID = string;
