@@ -8,8 +8,8 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ParseIdPipe } from 'src/pipes/id.pipe';
-import { SanitizeRegexPipe } from 'src/pipes/sanitize.pipe';
+import { ParseIdPipe } from '../pipes/id.pipe';
+import { SanitizeRegexPipe } from '../pipes/sanitize.pipe';
 import {
   CreatePostDto,
   ID,
