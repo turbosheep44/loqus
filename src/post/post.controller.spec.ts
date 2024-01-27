@@ -1,4 +1,4 @@
-import mock from 'jest-mock-extended/lib/Mock';
+import { mock } from 'jest-mock-extended';
 import { PostController } from './post.controller';
 import { CreatePostDto, PageInfo, SortInfo, UpdatePostDto } from './post.dto';
 import { Post } from './post.schema';
