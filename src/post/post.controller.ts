@@ -6,9 +6,10 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ParseIdPipe } from 'src/pipes/id.pipe';
-import { CreatePostDto, ID, UpdatePostDto } from './post.dto';
+import { CreatePostDto, ID, PageInfo, UpdatePostDto } from './post.dto';
 import { Post as BlogPost } from './post.schema';
 import { PostService } from './post.service';
 
@@ -17,8 +18,8 @@ export class PostController {
   constructor(private service: PostService) {}
 
   @Get()
-  findAll(): Promise<BlogPost[]> {
-    return this.service.findAll();
+  findAll(@Query() pageInfo: PageInfo): Promise<BlogPost[]> {
+    return this.service.findAll(pageInfo);
   }
 
   @Post()

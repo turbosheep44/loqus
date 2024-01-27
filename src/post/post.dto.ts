@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsPositive } from 'class-validator';
 
 export class CreatePostDto {
   @IsNotEmpty() title: string;
@@ -15,3 +15,8 @@ export class UpdatePostDto {
  * a string identifier which must be a valid MongoDB ID
  */
 export type ID = string;
+
+export class PageInfo {
+  @IsPositive() page: number = 1;
+  @IsPositive() pageSize: number = 10;
+}
