@@ -1,8 +1,12 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { PostModule } from './post/post.module';
 
 @Module({
-  imports: [PostModule],
+  imports: [
+    MongooseModule.forRoot('mongodb://localhost:27017/blog'),
+    PostModule,
+  ],
   controllers: [],
   providers: [],
 })
