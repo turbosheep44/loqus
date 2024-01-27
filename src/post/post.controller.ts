@@ -30,7 +30,6 @@ export class PostController {
     @Query('search', SanitizeRegexPipe) search: string,
     @Query() sort: SortInfo,
   ): Promise<BlogPost[]> {
-    console.log(pageInfo, search, sort);
     return this.service.findAll(pageInfo, search, sort);
   }
 
