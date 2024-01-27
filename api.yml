@@ -1,0 +1,186 @@
+openapi: 3.0.3
+info:
+  title: Blog Post API
+  description: This API allows the user to create, read, update and delete blog posts.
+  contact:
+    name: Matthew Axisa
+    email: matthew.axisa4@gmail.com
+  version: 1.0.0
+
+tags:
+  - name: posts
+
+paths:
+  /post:
+    get:
+      tags: [posts]
+      summary: get a list of blog posts.
+      description: search and sort blog posts.
+      parameters:
+        - name: search
+          description: find blog posts with the query text in their title or content
+          allowEmptyValue: true
+          in: query
+          schema:
+            type: string
+            nullable: true
+        - name: page
+          in: query
+          schema:
+            type: number
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: number
+            default: 10
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum:
+              - createdAt
+              - title
+            default: createdAt
+        - name: sortDirection
+          in: query
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+
+    post:
+      tags: [posts]
+      summary: create a new post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePostDto'
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: bad request
+
+  /post/{id}:
+    get:
+      tags: [posts]
+      summary: get a post by its ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ID'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '404':
+          description: not found
+
+    put:
+      tags: [posts]
+      summary: update a post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePostDto'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '404':
+          description: not found
+
+    delete:
+      tags: [posts]
+      summary: delete a post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ID'
+      responses:
+        '201':
+          description: success
+
+components:
+  schemas:
+    ID:
+      type: string
+      example: abcdefgh12345678abcdefgh
+
+    Post:
+      type: object
+      properties:
+        _id:
+          $ref: '#/components/schemas/ID'
+        title:
+          type: string
+          example: roast chicken
+        content:
+          type: string
+          example: an easy and quick roast chicken recipe...
+        author:
+          type: string
+          example: Gordon Ramsay
+        createdAt:
+          type: string
+          format: date-time
+
+    CreatePostDto:
+      type: object
+      properties:
+        title:
+          type: string
+          example: roast chicken
+        content:
+          type: string
+          example: an easy and quick roast chicken recipe...
+        author:
+          type: string
+          example: Gordon Ramsay
+
+    UpdatePostDto:
+      type: object
+      properties:
+        title:
+          type: string
+          example: roast chicken
+        content:
+          type: string
+          example: an easy and quick roast chicken recipe...

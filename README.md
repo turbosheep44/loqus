@@ -1,6 +1,6 @@
 # Loqus Interview Task
 
-The full description of the task can be found [here](./TASK.md).
+The full description of the task can be found [here](./TASK.md). The OpenAPI 3.0 specification of this API can be found at [`api.yml`](./api.yml).
 
 The project can be built using `docker`:
 
