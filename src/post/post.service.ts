@@ -47,7 +47,6 @@ export class PostService {
   }
 
   async create(dto: CreatePostDto): Promise<Post> {
-    console.log(dto);
     const post = new this.posts({
       title: dto.title,
       content: dto.content,
