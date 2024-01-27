@@ -13,3 +13,5 @@ In order to run, the application needs a MongoDB instance to be running. Once th
 ```sh
 docker compose up -d
 ```
+
+Once the server has started, the API can be accessed at `localhost:3000/`.
