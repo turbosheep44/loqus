@@ -1,10 +1,12 @@
-export interface CreatePostDto {
-  title: string;
-  content: string;
-  author: string;
+import { IsNotEmpty } from 'class-validator';
+
+export class CreatePostDto {
+  @IsNotEmpty() title: string;
+  @IsNotEmpty() content: string;
+  @IsNotEmpty() author: string;
 }
 
-export interface UpdatePostDto {
-  title: string;
-  content: string;
+export class UpdatePostDto {
+  @IsNotEmpty() title: string;
+  @IsNotEmpty() content: string;
 }
