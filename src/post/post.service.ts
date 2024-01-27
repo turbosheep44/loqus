@@ -33,4 +33,9 @@ export class PostService {
 
     return await post.save();
   }
+
+  async delete(id: string): Promise<void> {
+    const result = await this.posts.findByIdAndDelete(id);
+    if (result == null) console.warn(`could not delete post [${id}] not found`);
+  }
 }
