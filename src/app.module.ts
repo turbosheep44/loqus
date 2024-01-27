@@ -4,7 +4,10 @@ import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/blog'),
+    MongooseModule.forRoot('mongodb://localhost:27017/blog', {
+      auth: { username: 'root', password: 'example' },
+      authSource: 'admin',
+    }),
     PostModule,
   ],
   controllers: [],
