@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
@@ -41,7 +41,7 @@ export class PostService {
 
   async find(id: ID): Promise<Post> {
     const post = await this.posts.findById(id).exec();
-    if (post == null) throw 'post not found';
+    if (post == null) throw new NotFoundException();
 
     return post;
   }
@@ -60,7 +60,7 @@ export class PostService {
 
   async update(id: ID, dto: UpdatePostDto): Promise<Post> {
     const post = await this.posts.findById(id).exec();
-    if (post == null) throw 'post not found';
+    if (post == null) throw new NotFoundException();
 
     post.title = dto.title;
     post.content = dto.content;
