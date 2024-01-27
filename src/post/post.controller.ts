@@ -25,6 +25,11 @@ export class PostController {
     return this.service.create(post);
   }
 
+  @Get(':id')
+  find(@Param('id') id: string): Promise<BlogPost> {
+    return this.service.find(id);
+  }
+
   @Put(':id')
   async update(
     @Param('id') id: string,

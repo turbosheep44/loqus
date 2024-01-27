@@ -12,6 +12,13 @@ export class PostService {
     return this.posts.find().exec();
   }
 
+  async find(id: string): Promise<Post> {
+    const post = await this.posts.findById(id).exec();
+    if (post == null) throw 'post not found';
+
+    return post;
+  }
+
   async create(dto: CreatePostDto): Promise<Post> {
     console.log(dto);
     const post = new this.posts({
