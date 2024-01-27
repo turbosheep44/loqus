@@ -3,3 +3,8 @@ export interface CreatePostDto {
   content: string;
   author: string;
 }
+
+export interface UpdatePostDto {
+  title: string;
+  content: string;
+}

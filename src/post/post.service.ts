@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreatePostDto } from './post.dto';
+import { CreatePostDto, UpdatePostDto } from './post.dto';
 import { Post } from './post.schema';
 
 @Injectable()
@@ -20,6 +20,16 @@ export class PostService {
       author: dto.author,
       createdAt: new Date(),
     });
+
+    return await post.save();
+  }
+
+  async update(id: string, dto: UpdatePostDto): Promise<Post> {
+    const post = await this.posts.findById(id).exec();
+    if (post == null) throw 'post not found';
+
+    post.title = dto.title;
+    post.content = dto.content;
 
     return await post.save();
   }
