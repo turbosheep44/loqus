@@ -16,7 +16,7 @@ export class PostService {
 
   async findAll(
     pageInfo: PageInfo,
-    search: string,
+    search: string | null,
     sort: SortInfo,
   ): Promise<Post[]> {
     const query = search
@@ -47,7 +47,7 @@ export class PostService {
   }
 
   async create(dto: CreatePostDto): Promise<Post> {
-    const post = new this.posts({
+    const post = await this.posts.create({
       title: dto.title,
       content: dto.content,
       author: dto.author,

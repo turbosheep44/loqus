@@ -24,8 +24,8 @@ export class PageInfo {
 const SORT_FIELDS = ['createdAt', 'title'] as const;
 const SORT_DIRECTIONS = ['asc', 'desc'] as const;
 
-type SortField = (typeof SORT_FIELDS)[number];
-type SortDirection = (typeof SORT_DIRECTIONS)[number];
+export type SortField = (typeof SORT_FIELDS)[number];
+export type SortDirection = (typeof SORT_DIRECTIONS)[number];
 
 export class SortInfo {
   @IsIn(SORT_FIELDS) sortBy: SortField = 'createdAt';
