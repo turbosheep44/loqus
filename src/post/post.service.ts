@@ -1,14 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreatePostDto, ID, PageInfo, UpdatePostDto } from './post.dto';
+import {
+  CreatePostDto,
+  ID,
+  PageInfo,
+  SortInfo,
+  UpdatePostDto,
+} from './post.dto';
 import { Post } from './post.schema';
 
 @Injectable()
 export class PostService {
   constructor(@InjectModel(Post.name) private posts: Model<Post>) {}
 
-  async findAll(pageInfo: PageInfo, search: string): Promise<Post[]> {
+  async findAll(
+    pageInfo: PageInfo,
+    search: string,
+    sort: SortInfo,
+  ): Promise<Post[]> {
     const query = search
       ? {
           $or: [
@@ -20,7 +30,9 @@ export class PostService {
 
     return this.posts
       .find()
-      .sort('createdAt')
+      .sort({
+        [sort.sortBy]: sort.sortDirection,
+      })
       .skip((pageInfo.page - 1) * pageInfo.pageSize)
       .limit(pageInfo.pageSize)
       .where(query)

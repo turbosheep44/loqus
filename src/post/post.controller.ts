@@ -10,7 +10,13 @@ import {
 } from '@nestjs/common';
 import { ParseIdPipe } from 'src/pipes/id.pipe';
 import { SanitizeRegexPipe } from 'src/pipes/sanitize.pipe';
-import { CreatePostDto, ID, PageInfo, UpdatePostDto } from './post.dto';
+import {
+  CreatePostDto,
+  ID,
+  PageInfo,
+  SortInfo,
+  UpdatePostDto,
+} from './post.dto';
 import { Post as BlogPost } from './post.schema';
 import { PostService } from './post.service';
 
@@ -22,9 +28,10 @@ export class PostController {
   findAll(
     @Query() pageInfo: PageInfo,
     @Query('search', SanitizeRegexPipe) search: string,
+    @Query() sort: SortInfo,
   ): Promise<BlogPost[]> {
-    console.log(search);
-    return this.service.findAll(pageInfo, search);
+    console.log(pageInfo, search, sort);
+    return this.service.findAll(pageInfo, search, sort);
   }
 
   @Post()

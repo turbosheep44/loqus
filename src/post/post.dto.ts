@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsPositive } from 'class-validator';
+import { IsIn, IsNotEmpty, IsPositive } from 'class-validator';
 
 export class CreatePostDto {
   @IsNotEmpty() title: string;
@@ -19,4 +19,15 @@ export type ID = string;
 export class PageInfo {
   @IsPositive() page: number = 1;
   @IsPositive() pageSize: number = 10;
+}
+
+const SORT_FIELDS = ['createdAt', 'title'] as const;
+const SORT_DIRECTIONS = ['asc', 'desc'] as const;
+
+type SortField = (typeof SORT_FIELDS)[number];
+type SortDirection = (typeof SORT_DIRECTIONS)[number];
+
+export class SortInfo {
+  @IsIn(SORT_FIELDS) sortBy: SortField = 'createdAt';
+  @IsIn(SORT_DIRECTIONS) sortDirection: SortDirection = 'desc';
 }
