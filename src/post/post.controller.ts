@@ -9,6 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ParseIdPipe } from 'src/pipes/id.pipe';
+import { SanitizeRegexPipe } from 'src/pipes/sanitize.pipe';
 import { CreatePostDto, ID, PageInfo, UpdatePostDto } from './post.dto';
 import { Post as BlogPost } from './post.schema';
 import { PostService } from './post.service';
@@ -18,8 +19,12 @@ export class PostController {
   constructor(private service: PostService) {}
 
   @Get()
-  findAll(@Query() pageInfo: PageInfo): Promise<BlogPost[]> {
-    return this.service.findAll(pageInfo);
+  findAll(
+    @Query() pageInfo: PageInfo,
+    @Query('search', SanitizeRegexPipe) search: string,
+  ): Promise<BlogPost[]> {
+    console.log(search);
+    return this.service.findAll(pageInfo, search);
   }
 
   @Post()

@@ -8,12 +8,22 @@ import { Post } from './post.schema';
 export class PostService {
   constructor(@InjectModel(Post.name) private posts: Model<Post>) {}
 
-  async findAll(pageInfo: PageInfo): Promise<Post[]> {
+  async findAll(pageInfo: PageInfo, search: string): Promise<Post[]> {
+    const query = search
+      ? {
+          $or: [
+            { title: { $regex: `.*${search}.*`, $options: 'i' } },
+            { content: { $regex: `.*${search}.*`, $options: 'i' } },
+          ],
+        }
+      : {};
+
     return this.posts
       .find()
       .sort('createdAt')
       .skip((pageInfo.page - 1) * pageInfo.pageSize)
       .limit(pageInfo.pageSize)
+      .where(query)
       .exec();
   }
 
