@@ -10,24 +10,31 @@ describe('AuthGuard', () => {
   let ctx: ExecutionContext;
   let authHeader: string | undefined;
   let path: string;
+  let method: string;
 
   beforeEach(() => {
     jwtService = createMock<JwtService>();
     ctx = createMock<ExecutionContext>({
       switchToHttp: () => ({
         getRequest: () => ({
-          path: path,
+          method,
+          path,
           headers: {
             authorization: authHeader,
           },
         }),
       }),
     });
-    const whitelist = [/\/ok/, /\/ok\/.+/, /\/whitelist/];
+
     path = '';
+    method = 'GET';
     authHeader = '';
 
-    guard = new AuthGuard(jwtService, whitelist);
+    guard = new AuthGuard(jwtService, [
+      ['GET', /\/ok/],
+      ['GET', /\/ok\/.+/],
+      ['POST', /\/whitelist/],
+    ]);
   });
 
   test.each([
@@ -51,18 +58,29 @@ describe('AuthGuard', () => {
     expect(guard.canActivate(ctx)).toStrictEqual(true);
   });
 
-  test.each(['/ok', '/whitelist', '/ok/abc'])(
-    'should return true on whitelisted paths [path=%s]',
-    (url) => {
-      path = url;
+  test.each([
+    ['GET', '/ok'],
+    ['GET', '/ok/abc'],
+    ['POST', '/whitelist'],
+  ])(
+    'should return true on whitelisted paths [method=%s, path=%s]',
+    (requestMethod, requestPath) => {
+      method = requestMethod;
+      path = requestPath;
       expect(guard.canActivate(ctx)).toStrictEqual(true);
     },
   );
 
-  test.each(['/ok/', '/blacklist', '/'])(
-    'should throw on paths which are not on the whitelist [path=%s]',
-    (url) => {
-      path = url;
+  test.each([
+    ['PUT', '/ok'],
+    ['DELETE', '/ok/123'],
+    ['GET', '/blacklist'],
+    ['DELETE', '/whitelist'],
+  ])(
+    'should throw on paths which are not on the whitelist [method=%s, path=%s]',
+    (requestMethod, requestPath) => {
+      method = requestMethod;
+      path = requestPath;
       expect(() => guard.canActivate(ctx)).toThrow(UnauthorizedException);
     },
   );

@@ -11,7 +11,7 @@ import { Request } from 'express';
 export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
-    private whitelist: RegExp[],
+    private whitelist: [string, RegExp][],
   ) {}
 
   canActivate(context: ExecutionContext): boolean {
@@ -32,8 +32,12 @@ export class AuthGuard implements CanActivate {
 
   private isWhitelisted(request: Request): boolean {
     const path = request.path;
+    const method = request.method;
+
     return this.whitelist.some((allowed) => {
-      const result = allowed.exec(path);
+      if (allowed[0] != method) return false;
+
+      const result = allowed[1].exec(path);
       return result != null && result[0].length == path.length;
     });
   }
