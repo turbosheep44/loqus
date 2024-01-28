@@ -12,7 +12,11 @@ import { TokenModule } from './token/token.module';
       provide: APP_GUARD,
       inject: [JwtService],
       useFactory: (jwtService: JwtService) => {
-        return new AuthGuard(jwtService, [/\/token/]);
+        return new AuthGuard(jwtService, [
+          ['GET', /\/token/],
+          ['GET', /\/post/],
+          ['GET', /\/post\/\w+/],
+        ]);
       },
     },
   ],
