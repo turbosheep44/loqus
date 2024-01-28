@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
@@ -12,6 +12,8 @@ import { Post } from './post.schema';
 
 @Injectable()
 export class PostService {
+  private readonly log = new Logger(PostService.name);
+
   constructor(@InjectModel(Post.name) private posts: Model<Post>) {}
 
   async findAll(
@@ -69,6 +71,7 @@ export class PostService {
 
   async delete(id: ID): Promise<void> {
     const result = await this.posts.findByIdAndDelete(id);
-    if (result == null) console.warn(`could not delete post [${id}] not found`);
+    if (result == null)
+      this.log.warn(`could not delete post [${id}] not found`);
   }
 }

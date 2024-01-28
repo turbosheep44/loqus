@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthGuard } from './guards/auth.guard';
+import { RequestLoggerMiddleware } from './middleware/logger';
 import { PostModule } from './post/post.module';
 import { TokenModule } from './token/token.module';
 
@@ -36,4 +37,8 @@ import { TokenModule } from './token/token.module';
   ],
   controllers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestLoggerMiddleware).forRoutes('/*');
+  }
+}

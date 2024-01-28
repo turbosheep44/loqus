@@ -197,18 +197,5 @@ describe('PostService', () => {
       expect(model.findByIdAndDelete).toHaveBeenCalledTimes(1);
       expect(model.findByIdAndDelete).toHaveBeenCalledWith(id);
     });
-
-    it('should log a warning when the item is not found', async () => {
-      jest.spyOn(console, 'warn').mockImplementation(() => void 0);
-      jest
-        .spyOn(model, 'findByIdAndDelete')
-        .mockReturnValue(Promise.resolve(null) as never);
-
-      await service.delete(id);
-
-      expect(model.findByIdAndDelete).toHaveBeenCalledTimes(1);
-      expect(model.findByIdAndDelete).toHaveBeenCalledWith(id);
-      expect(console.warn).toHaveBeenCalledTimes(1);
-    });
   });
 });

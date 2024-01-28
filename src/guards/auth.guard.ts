@@ -2,6 +2,7 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -9,6 +10,8 @@ import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+  private readonly log = new Logger(AuthGuard.name);
+
   constructor(
     private jwtService: JwtService,
     private whitelist: [string, RegExp][],
@@ -19,11 +22,19 @@ export class AuthGuard implements CanActivate {
     if (this.isWhitelisted(request)) return true;
 
     const token = this.extractTokenFromHeader(request);
-    if (!token) throw new UnauthorizedException();
+    if (!token) {
+      this.log.warn(
+        `[${request.method} ${request.path}] unauthorized request; no token found`,
+      );
+      throw new UnauthorizedException();
+    }
 
     try {
       this.jwtService.verify(token);
     } catch {
+      this.log.warn(
+        `[${request.method} ${request.path}] unauthorized request; invalid token`,
+      );
       throw new UnauthorizedException();
     }
 
