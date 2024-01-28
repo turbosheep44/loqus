@@ -1,4 +1,4 @@
-import { mock } from 'jest-mock-extended';
+import { createMock } from '@golevelup/ts-jest';
 import { PostController } from './post.controller';
 import { CreatePostDto, PageInfo, SortInfo, UpdatePostDto } from './post.dto';
 import { Post } from './post.schema';
@@ -18,7 +18,7 @@ describe('PostController', () => {
     // I think it is better practice to mock dependencies and manually
     // instantiate the class
 
-    service = mock<PostService>();
+    service = createMock<PostService>();
     controller = new PostController(service);
   });
 

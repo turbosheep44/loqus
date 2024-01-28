@@ -1,3 +1,4 @@
+import { createMock } from '@golevelup/ts-jest';
 import { NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import {
@@ -13,19 +14,14 @@ import { PostService } from './post.service';
 
 describe('PostService', () => {
   let service: PostService;
-  let model: Partial<Model<Post>>;
+  let model: Model<Post>;
 
   const id: string = '0000';
   const systemTime = new Date(2000, 1, 1);
 
   beforeEach(async () => {
-    model = {
-      find: jest.fn(),
-      create: jest.fn(),
-      findById: jest.fn(),
-      findByIdAndDelete: jest.fn(),
-    };
-    service = new PostService(model as Model<Post>);
+    model = createMock<Model<Post>>();
+    service = new PostService(model);
   });
 
   beforeAll(() => {
