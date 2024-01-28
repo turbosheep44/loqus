@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PostModule } from './post/post.module';
+import { TokenModule } from './token/token.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { PostModule } from './post/post.module';
       },
     ),
     PostModule,
+    TokenModule,
   ],
   controllers: [],
   providers: [],
