@@ -9,20 +9,25 @@ describe('AuthGuard', () => {
   let jwtService: JwtService;
   let ctx: ExecutionContext;
   let authHeader: string | undefined;
+  let path: string;
 
   beforeEach(() => {
     jwtService = createMock<JwtService>();
     ctx = createMock<ExecutionContext>({
       switchToHttp: () => ({
         getRequest: () => ({
+          path: path,
           headers: {
             authorization: authHeader,
           },
         }),
       }),
     });
+    const whitelist = [/\/ok/, /\/ok\/.+/, /\/whitelist/];
+    path = '';
+    authHeader = '';
 
-    guard = new AuthGuard(jwtService);
+    guard = new AuthGuard(jwtService, whitelist);
   });
 
   test.each([
@@ -45,4 +50,20 @@ describe('AuthGuard', () => {
 
     expect(guard.canActivate(ctx)).toStrictEqual(true);
   });
+
+  test.each(['/ok', '/whitelist', '/ok/abc'])(
+    'should return true on whitelisted paths [path=%s]',
+    (url) => {
+      path = url;
+      expect(guard.canActivate(ctx)).toStrictEqual(true);
+    },
+  );
+
+  test.each(['/ok/', '/blacklist', '/'])(
+    'should throw on paths which are not on the whitelist [path=%s]',
+    (url) => {
+      path = url;
+      expect(() => guard.canActivate(ctx)).toThrow(UnauthorizedException);
+    },
+  );
 });

@@ -9,10 +9,15 @@ import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private whitelist: RegExp[],
+  ) {}
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
+    if (this.isWhitelisted(request)) return true;
+
     const token = this.extractTokenFromHeader(request);
     if (!token) throw new UnauthorizedException();
 
@@ -23,6 +28,14 @@ export class AuthGuard implements CanActivate {
     }
 
     return true;
+  }
+
+  private isWhitelisted(request: Request): boolean {
+    const path = request.path;
+    return this.whitelist.some((allowed) => {
+      const result = allowed.exec(path);
+      return result != null && result[0].length == path.length;
+    });
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
